@@ -4,6 +4,11 @@ from flask import url_for
 # All tests use flask app fixture, defined in conftest.py
 
 
+def upper_all(lst):
+    """Make all elements of a list uppercase"""
+    return [item.upper() for item in lst]
+
+
 def test_api_query(app, client):
     """Test query through flask API"""
     test_query = 'brc'
@@ -35,8 +40,8 @@ def test_api_query_species(app, client):
     res_all = client.get(url_all)
     assert res_all.status_code == 200
 
-    assert all([result in res_all.json['gene_suggest']
-                for result in res_species.json['gene_suggest']])
+    assert all([result in upper_all(res_all.json['gene_suggest'])
+                for result in upper_all(res_species.json['gene_suggest'])])
     assert (len(res_species.json['gene_suggest']) <
             len(res_all.json['gene_suggest']))
 
@@ -61,8 +66,8 @@ def test_api_query_limit(app, client):
     assert len(res_limit.json['gene_suggest']) == test_limit
     assert (len(res_limit.json['gene_suggest']) <
             len(res_all.json['gene_suggest']))
-    assert all([result in res_all.json['gene_suggest']
-                for result in res_limit.json['gene_suggest']])
+    assert all([result in upper_all(res_all.json['gene_suggest'])
+                for result in upper_all(res_limit.json['gene_suggest'])])
 
 
 def test_404_error(app, client):

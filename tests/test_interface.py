@@ -10,6 +10,11 @@ Define a query and the expected response.
 from gene_suggest.interface import get_suggestions
 
 
+def upper_all(lst):
+    """Make all elements of a list uppercase"""
+    return [item.upper() for item in lst]
+
+
 def test_live_db():
     """Test that the system works with the live database."""
     # Details for the database have been provided in the instructions
@@ -39,8 +44,11 @@ def test_query_with_species():
     results_all = get_suggestions(test_query)
     results_species = get_suggestions(test_query, species=test_species)
 
-    assert all([result in results_all for result in results_species])
+    assert all([result in upper_all(results_all)
+                for result in upper_all(results_species)])
     assert len(results_species) < len(results_all)
+    # duplicates test
+    assert len(results_species) == len(set(upper_all(results_species)))
 
 
 def test_query_with_limit():
@@ -57,9 +65,12 @@ def test_query_with_limit():
     # with limit is a subset
     assert len(results_limit) == test_limit
     assert len(results_limit) < len(results_all)
-    assert all([result in results_all for result in results_limit])
+    assert all([result in upper_all(results_all)
+                for result in upper_all(results_limit)])
     # high limit should be the same as no limit
     assert sorted(results_limit_big) == sorted(results_all)
+    # duplicates test
+    assert len(results_limit) == len(set(upper_all(results_limit)))
 
 
 #TODO test failure

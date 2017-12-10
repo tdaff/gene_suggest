@@ -101,18 +101,22 @@ def get_suggestions(query, species=None, limit=None):
     display_label = gene_autocomplete.columns.display_label
     species_c = gene_autocomplete.columns.species
 
-    c_query = session.query(gene_autocomplete)  # query the database
-    # Case insensitive at beginning of string
-    c_query = c_query.filter(display_label.ilike('{}%'.format(query)))
-    # filter by species only if requested
     if species is not None:
-        # == may not be case insensitive
+        # query based on label and species
+        c_query = session.query(display_label, species_c)
+        # == may not be case insensitive, so use ilike
         c_query = c_query.filter(species_c.ilike(species))
-    # only return unique solutions
-    c_query = c_query.distinct()
+    else:
+        # query only on labels, needed for distinct to work
+        c_query = session.query(display_label)
+    # Case insensitive at beginning of label
+    c_query = c_query.filter(display_label.ilike('{}%'.format(query)))
 
     if limit is not None:
         c_query = c_query.limit(limit)
+
+    # only return unique solutions
+    c_query = c_query.distinct()
 
     # convert query to results
     suggestions = [row.display_label for row in c_query]
