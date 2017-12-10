@@ -19,7 +19,7 @@ setup(name='gene_suggest',
       package_data={
           'gene_suggest': ['templates/*.html']},
       install_requires=['flask', 'sqlalchemy', 'pymysql'],
-      extras_require={'test': ['pytest']},
+      extras_require={'test': ['pytest', 'pytest-flask']},
       classifiers=[
           'Programming Language :: Python :: 3',
           'License :: OSI Approved :: BSD License'])
