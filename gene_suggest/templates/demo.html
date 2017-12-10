@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>gene_suggest demo</title>
+    <script>
+        function getSuggest() {
+            var query = document.getElementById("gene_input").value;
+            if (query.length < 2) {
+                return;
+            }
+            // add query to url manually
+            var query_url = "{{ url_for('query_gene_suggest', query='') }}" + query;
+            var output = $.ajax({
+                url: query_url,
+                type: 'GET',
+                data: {'limit': 10},
+                dataType: 'json',
+                success: function (data) {
+                    //Update suggestions box
+                    document.getElementById("suggestions").innerHTML = data.gene_suggest;
+                },
+                error: function (err) {
+                    console.log(err);
+                    alert(err);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>gene_suggest</h1>
+<p>Type 2 or more characters for suggestions</p>
+<form>
+    <label for="gene_input">Gene Query</label>
+    <input title="gene" type="text" name="query" id="gene_input"
+           oninput=getSuggest()>
+</form>
+<h2 id="suggestions"></h2>
+</body>
+</html>
