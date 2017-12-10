@@ -22,7 +22,7 @@ Return a list of suggested gene names for the given query.
 ## Sample request
 
 ```
-curl --get --include 'http://gene_suggest.com/query/brc?species=homo_sapiens'
+curl --get --include 'http://localhost:5000/gene_suggest/query?species=homo_sapiens'
 ```
 
 ## Sample response
